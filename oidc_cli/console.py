@@ -47,7 +47,10 @@ def pick_free_port():
 def do_auth(login_url: str, callback_port: int):
     auth_result = asyncio.Future()
 
-    cherrypy.config.update({'server.socket_port': callback_port})
+    cherrypy.config.update({
+        'server.socket_port': callback_port,
+        'log.screen': False
+    })
     cherrypy.tree.mount(Callback(auth_result), '/')
     cherrypy.engine.start()
     webbrowser.open(login_url)
