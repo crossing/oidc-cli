@@ -1,13 +1,14 @@
 import asyncio
 import os
+import socket
 import tempfile
 import webbrowser
-import socket
 from time import sleep
 
 import cherrypy
 from oidcrp import RPHandler, DEFAULT_RP_KEY_DEFS
 
+from oidc_cli.argument import build_client_config
 from .callback import Callback
 
 
@@ -63,21 +64,9 @@ def do_auth(login_url: str, callback_port: int):
 
 
 def config(baseurl):
-    return {
-        'issuer': 'https://login.partner.microsoftonline.cn/d9b5e346-fa0c-40a4-8cec-ad494f51265e/v2.0',
-        'client_id': '359a7248-c9ea-4fcc-b5be-ee4fa2d5a2f9',
-        'redirect_uris': [baseurl],
-        'behaviour': {
-            'response_types': ['id_token'],
-            'scope': ['openid']
-        },
-        'request_args': {
-            'response_mode': 'form_post'
-        },
-        'allow': {
-            'issuer_mismatch': True
-        }
-    }
+    result = build_client_config()
+    result.update({'redirect_uris': [baseurl]})
+    return result
 
 
 if __name__ == '__main__':
