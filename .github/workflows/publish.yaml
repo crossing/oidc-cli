@@ -1,0 +1,40 @@
+name: Upload Python Package
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install poetry==1.0.10
+    - name: Build and package
+      run: |
+        TAG=${GITHUB_REF##*/}
+        VERSION=$(echo $TAG | sed 's/^v//g'}
+        sed -i 's/^version\s*=\s*".*"/version = "'$VERSION'"/g' pyproject.toml
+        poetry build
+
+        RELEASE_UPLOAD_URL=$(curl "$GITHUB_API_URL/$GITHUB_REPOSITORY/releases/tags/$TAG" | jq -r '.upload_url')
+        PACKAGE_PATH=$(ls dist/*.tar.gz)
+        PACKAGE_NAME=${PACKAGE##*/}
+
+        echo "::set-env name=RELEASE_UPLOAD_URL::$RELEASE_UPLOAD_URL"
+        echo "::set-env name=PACKAGE_PATH::$PACKAGE_PATH"
+        echo "::set-env name=PACKAGE_NAME::$PACKAGE_NAME"
+    - name: Upload artifacts
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ env.RELEASE_UPLOAD_URL }}
+        asset_path: ${{ env.PACKAGE_PATH }}
+        asset_name: ${{ env.PACKAGE_NAME }}
+        asset_content_type: application/tar+gzip
