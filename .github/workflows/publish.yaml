@@ -38,3 +38,5 @@ jobs:
         asset_path: ${{ env.PACKAGE_PATH }}
         asset_name: ${{ env.PACKAGE_NAME }}
         asset_content_type: application/tar+gzip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
