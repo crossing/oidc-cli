@@ -26,7 +26,7 @@ jobs:
 
         RELEASE_UPLOAD_URL=$(curl "$GITHUB_API_URL/$GITHUB_REPOSITORY/releases/tags/$TAG" | jq -r '.upload_url')
         PACKAGE_PATH=$(ls dist/*.tar.gz)
-        PACKAGE_NAME=${PACKAGE##*/}
+        PACKAGE_NAME=${PACKAGE_PATH##*/}
 
         echo "::set-env name=RELEASE_UPLOAD_URL::$RELEASE_UPLOAD_URL"
         echo "::set-env name=PACKAGE_PATH::$PACKAGE_PATH"
