@@ -20,7 +20,7 @@ jobs:
     - name: Build and package
       run: |
         TAG=${GITHUB_REF##*/}
-        VERSION=$(echo $TAG | sed 's/^v//g'}
+        VERSION=$(echo $TAG | sed 's/^v//g')
         sed -i 's/^version\s*=\s*".*"/version = "'$VERSION'"/g' pyproject.toml
         poetry build
 
