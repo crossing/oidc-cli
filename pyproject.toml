@@ -8,7 +8,7 @@ authors = ["Xing Yang <xor@jecity.net>"]
 oidc = 'oidc_cli.console:run'
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.6"
 oidcrp = "^0.8.0"
 cherrypy = "^18.6.0"
 
