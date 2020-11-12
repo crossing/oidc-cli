@@ -1,8 +1,10 @@
 import asyncio
 import os
 import socket
+import sys
 import tempfile
 import webbrowser
+import pprint
 from time import sleep
 
 import cherrypy
@@ -10,8 +12,6 @@ from oidcrp import RPHandler, DEFAULT_RP_KEY_DEFS
 
 from oidc_cli.argument import setup
 from .callback import Callback
-
-import logging
 
 
 def run():
@@ -27,7 +27,12 @@ def run():
     result = do_auth(info['url'], port)
     rp.finalize(issuer, result)
 
+    if 'error' in result:
+        pprint.pprint(result, sys.stderr)
+        return 1
+
     print(result['id_token'])
+    return 0
 
 
 def adjust_key_jar_path():
