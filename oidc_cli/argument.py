@@ -1,11 +1,19 @@
 import argparse
+import logging
 
 from oidc_cli.provider import Provider, AzureChinaProvider
 
 
-def build_client_config(args=None):
+def setup(args=None):
     parser = _make_parser()
     parse_result = parser.parse_args(args)
+
+    logger = logging.getLogger()
+    if parse_result.verbose:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.ERROR)
+
     provider = _make_provider(parse_result)
     return provider.client_config(parse_result.client_id)
 
@@ -16,6 +24,7 @@ def _make_parser():
 
     def add_common_arguments(subparser):
         subparser.add_argument('--client-id', '-c', required=True, help='client id')
+        subparser.add_argument('--verbose', '-v', required=False, action='store_true')
 
     generic_parser = subparsers.add_parser('generic', help='Generic Provider')
     generic_parser.add_argument('--issuer', '-i', required=True, help='issuer url')

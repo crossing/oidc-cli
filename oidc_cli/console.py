@@ -8,8 +8,10 @@ from time import sleep
 import cherrypy
 from oidcrp import RPHandler, DEFAULT_RP_KEY_DEFS
 
-from oidc_cli.argument import build_client_config
+from oidc_cli.argument import setup
 from .callback import Callback
+
+import logging
 
 
 def run():
@@ -50,7 +52,9 @@ def do_auth(login_url: str, callback_port: int):
 
     cherrypy.config.update({
         'server.socket_port': callback_port,
-        'log.screen': False
+        'log.screen': False,
+        'log.access_file': '',
+        'log.error_file': ''
     })
     cherrypy.tree.mount(Callback(auth_result), '/')
     cherrypy.engine.start()
@@ -64,7 +68,7 @@ def do_auth(login_url: str, callback_port: int):
 
 
 def config(baseurl):
-    result = build_client_config()
+    result = setup()
     result.update({'redirect_uris': [baseurl]})
     return result
 
