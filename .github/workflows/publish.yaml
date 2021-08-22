@@ -16,13 +16,13 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install poetry==1.0.10
+        pip install poetry==1.1.7
     - name: Build and package
       run: |
         TAG=${GITHUB_REF##*/}
         VERSION=$(echo $TAG | sed 's/^v//g')
         sed -i 's/^version\s*=\s*".*"/version = "'$VERSION'"/g' pyproject.toml
-        poetry build
+        poetry build        
 
         RELEASE_UPLOAD_URL=$(curl "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/$TAG" | jq -r '.upload_url')
         PACKAGE_PATH=$(ls dist/*.tar.gz)
