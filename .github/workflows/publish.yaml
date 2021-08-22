@@ -28,9 +28,9 @@ jobs:
         PACKAGE_PATH=$(ls dist/*.tar.gz)
         PACKAGE_NAME=${PACKAGE_PATH##*/}
 
-        echo "::set-env name=RELEASE_UPLOAD_URL::$RELEASE_UPLOAD_URL"
-        echo "::set-env name=PACKAGE_PATH::$PACKAGE_PATH"
-        echo "::set-env name=PACKAGE_NAME::$PACKAGE_NAME"
+        echo "RELEASE_UPLOAD_URL=$RELEASE_UPLOAD_URL" >> $GITHUB_ENV
+        echo "PACKAGE_PATH=$PACKAGE_PATH" >> $GITHUB_ENV
+        echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
     - name: Upload artifacts
       uses: actions/upload-release-asset@v1
       with:
